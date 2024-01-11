@@ -2,10 +2,10 @@
 
 Name:           mingw-glib2
 Version:        2.70.1
-Release:        2%{?dist}
+Release:        4%{?dist}
 Summary:        MinGW Windows GLib2 library
 
-License:        LGPLv2+
+License:        LGPL-2.0-or-later
 URL:            http://www.gtk.org
 # first two digits of version
 %global release_version %(echo %{version} | awk -F. '{print $1"."$2}')
@@ -19,6 +19,7 @@ BuildRequires:  gcc-c++
 
 BuildRequires:  mingw32-filesystem >= 107
 BuildRequires:  mingw32-gcc
+BuildRequires:  mingw32-gcc-c++
 BuildRequires:  mingw32-binutils
 BuildRequires:  mingw32-win-iconv
 BuildRequires:  mingw32-gettext
@@ -28,6 +29,7 @@ BuildRequires:  mingw32-zlib
 
 BuildRequires:  mingw64-filesystem >= 107
 BuildRequires:  mingw64-gcc
+BuildRequires:  mingw64-gcc-c++
 BuildRequires:  mingw64-binutils
 BuildRequires:  mingw64-win-iconv
 BuildRequires:  mingw64-gettext
@@ -270,6 +272,14 @@ find %{buildroot} -name "*.la" -delete
 
 
 %changelog
+* Mon Aug 7 2023 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.70.1-4
+- Fix Glib2 build
+- Resolves: RHEL-1056
+
+* Mon Aug 7 2023 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.70.1-3
+- Update license to SPDX format
+- Resolves: RHEL-1056
+
 * Mon Aug 08 2022 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.70.1-2
 - Rebuild for mingw-zlib update
   resolves: rhbz#2116278
