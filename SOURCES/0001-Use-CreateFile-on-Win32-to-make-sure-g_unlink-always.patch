@@ -1,13 +1,13 @@
-diff -rupN --no-dereference glib-2.66.7/gio/tests/org.gtk.test.gschema.override.orig glib-2.66.7-new/gio/tests/org.gtk.test.gschema.override.orig
---- glib-2.66.7/gio/tests/org.gtk.test.gschema.override.orig	2021-02-11 13:24:55.208942400 +0100
-+++ glib-2.66.7-new/gio/tests/org.gtk.test.gschema.override.orig	1970-01-01 01:00:00.000000000 +0100
+diff -rupN --no-dereference glib-2.78.0/gio/tests/org.gtk.test.gschema.override.orig glib-2.78.0-new/gio/tests/org.gtk.test.gschema.override.orig
+--- glib-2.78.0/gio/tests/org.gtk.test.gschema.override.orig	2023-09-08 15:42:18.000000000 +0200
++++ glib-2.78.0-new/gio/tests/org.gtk.test.gschema.override.orig	1970-01-01 01:00:00.000000000 +0100
 @@ -1,2 +0,0 @@
 -[org.gtk.test.per-desktop:GNOME-Classic]
 -desktop = "GNOME Classic"
-diff -rupN --no-dereference glib-2.66.7/gio/tests/org.gtk.test.gschema.xml.orig glib-2.66.7-new/gio/tests/org.gtk.test.gschema.xml.orig
---- glib-2.66.7/gio/tests/org.gtk.test.gschema.xml.orig	2021-02-11 13:24:55.208942400 +0100
-+++ glib-2.66.7-new/gio/tests/org.gtk.test.gschema.xml.orig	1970-01-01 01:00:00.000000000 +0100
-@@ -1,222 +0,0 @@
+diff -rupN --no-dereference glib-2.78.0/gio/tests/org.gtk.test.gschema.xml.orig glib-2.78.0-new/gio/tests/org.gtk.test.gschema.xml.orig
+--- glib-2.78.0/gio/tests/org.gtk.test.gschema.xml.orig	2023-09-08 15:42:18.000000000 +0200
++++ glib-2.78.0-new/gio/tests/org.gtk.test.gschema.xml.orig	1970-01-01 01:00:00.000000000 +0100
+@@ -1,225 +0,0 @@
 -<schemalist>
 -
 -  <schema id="org.gtk.test" path="/tests/" gettext-domain="test">
@@ -92,6 +92,9 @@ diff -rupN --no-dereference glib-2.66.7/gio/tests/org.gtk.test.gschema.xml.orig 
 -    </key>
 -    <key name="backspace" type="s">
 -      <default l10n="messages" context="keyboard label">"BackSpace"</default>
+-    </key>
+-    <key name="midnight" type="s">
+-      <default l10n="time">"12:00 AM"</default>
 -    </key>
 -  </schema>
 -
@@ -230,10 +233,10 @@ diff -rupN --no-dereference glib-2.66.7/gio/tests/org.gtk.test.gschema.xml.orig 
 -  </schema>
 -
 -</schemalist>
-diff -rupN --no-dereference glib-2.66.7/glib/gstdio.c glib-2.66.7-new/glib/gstdio.c
---- glib-2.66.7/glib/gstdio.c	2021-02-11 13:24:55.239942800 +0100
-+++ glib-2.66.7-new/glib/gstdio.c	2021-03-05 23:02:21.918877448 +0100
-@@ -1045,6 +1045,11 @@ g_open (const gchar *filename,
+diff -rupN --no-dereference glib-2.78.0/glib/gstdio.c glib-2.78.0-new/glib/gstdio.c
+--- glib-2.78.0/glib/gstdio.c	2023-09-08 15:42:18.000000000 +0200
++++ glib-2.78.0-new/glib/gstdio.c	2023-09-19 11:45:02.396539056 +0200
+@@ -1052,6 +1052,11 @@ g_open (const gchar *filename,
  	int          mode)
  {
  #ifdef G_OS_WIN32
@@ -245,7 +248,7 @@ diff -rupN --no-dereference glib-2.66.7/glib/gstdio.c glib-2.66.7-new/glib/gstdi
    wchar_t *wfilename = g_utf8_to_utf16 (filename, -1, NULL, NULL, NULL);
    int retval;
    int save_errno;
-@@ -1055,12 +1060,114 @@ g_open (const gchar *filename,
+@@ -1062,12 +1067,114 @@ g_open (const gchar *filename,
        return -1;
      }
  
@@ -363,7 +366,7 @@ diff -rupN --no-dereference glib-2.66.7/glib/gstdio.c glib-2.66.7-new/glib/gstdi
    return retval;
  #else
    int fd;
-@@ -1108,6 +1215,8 @@ g_creat (const gchar *filename,
+@@ -1115,6 +1222,8 @@ g_creat (const gchar *filename,
  	 int          mode)
  {
  #ifdef G_OS_WIN32
@@ -372,7 +375,7 @@ diff -rupN --no-dereference glib-2.66.7/glib/gstdio.c glib-2.66.7-new/glib/gstdi
    wchar_t *wfilename = g_utf8_to_utf16 (filename, -1, NULL, NULL, NULL);
    int retval;
    int save_errno;
-@@ -1118,12 +1227,41 @@ g_creat (const gchar *filename,
+@@ -1125,12 +1234,41 @@ g_creat (const gchar *filename,
        return -1;
      }
  
@@ -417,7 +420,7 @@ diff -rupN --no-dereference glib-2.66.7/glib/gstdio.c glib-2.66.7-new/glib/gstdi
    return retval;
  #else
    return creat (filename, mode);
-@@ -1565,34 +1703,102 @@ g_fopen (const gchar *filename,
+@@ -1572,34 +1710,102 @@ g_fopen (const gchar *filename,
  	 const gchar *mode)
  {
  #ifdef G_OS_WIN32

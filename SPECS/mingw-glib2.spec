@@ -1,8 +1,8 @@
 %{?mingw_package_header}
 
 Name:           mingw-glib2
-Version:        2.70.1
-Release:        4%{?dist}
+Version:        2.78.0
+Release:        1%{?dist}
 Summary:        MinGW Windows GLib2 library
 
 License:        LGPL-2.0-or-later
@@ -19,23 +19,21 @@ BuildRequires:  gcc-c++
 
 BuildRequires:  mingw32-filesystem >= 107
 BuildRequires:  mingw32-gcc
-BuildRequires:  mingw32-gcc-c++
 BuildRequires:  mingw32-binutils
 BuildRequires:  mingw32-win-iconv
 BuildRequires:  mingw32-gettext
 BuildRequires:  mingw32-libffi
-BuildRequires:  mingw32-pcre
-BuildRequires:  mingw32-zlib
+BuildRequires:  mingw32-pcre2
+BuildRequires:  mingw32-zlib >= 1.2.13
 
 BuildRequires:  mingw64-filesystem >= 107
 BuildRequires:  mingw64-gcc
-BuildRequires:  mingw64-gcc-c++
 BuildRequires:  mingw64-binutils
 BuildRequires:  mingw64-win-iconv
 BuildRequires:  mingw64-gettext
 BuildRequires:  mingw64-libffi
-BuildRequires:  mingw64-pcre
-BuildRequires:  mingw64-zlib
+BuildRequires:  mingw64-pcre2
+BuildRequires:  mingw64-zlib >= 1.2.13
 
 # Native version required for msgfmt use in build
 BuildRequires:  gettext
@@ -98,10 +96,17 @@ Static version of the MinGW Windows GLib2 library.
 %autosetup -p1 -n glib-%{version}
 
 %build
-%mingw_meson --default-library=both
+export MINGW_BUILDDIR_SUFFIX=static
+%mingw_meson --default-library=static
+%mingw_ninja
+export MINGW_BUILDDIR_SUFFIX=shared
+%mingw_meson --default-library=shared
 %mingw_ninja
 
 %install
+export MINGW_BUILDDIR_SUFFIX=static
+%mingw_ninja_install
+export MINGW_BUILDDIR_SUFFIX=shared
 %mingw_ninja_install
 
 # There's a small difference in the file glibconfig.h between the
@@ -151,9 +156,11 @@ rm -f %{buildroot}%{mingw64_libdir}/*.def
 # The gdbus-codegen pieces are already in the native glib2 package
 rm -f %{buildroot}%{mingw32_bindir}/gdbus-codegen
 rm -rf %{buildroot}%{mingw32_libdir}/gdbus-2.0
+sed -i 's|gdbus_codegen=.*|gdbus_codegen=%{_bindir}/gdbus-codegen|g' %{buildroot}%{mingw32_libdir}/pkgconfig/gio-2.0.pc
 
 rm -f %{buildroot}%{mingw64_bindir}/gdbus-codegen
 rm -rf %{buildroot}%{mingw64_libdir}/gdbus-2.0
+sed -i 's|gdbus_codegen=.*|gdbus_codegen=%{_bindir}/gdbus-codegen|g' %{buildroot}%{mingw64_libdir}/pkgconfig/gio-2.0.pc
 
 # Drop all .la files
 find %{buildroot} -name "*.la" -delete
@@ -272,6 +279,16 @@ find %{buildroot} -name "*.la" -delete
 
 
 %changelog
+* Thu Oct 26 2023 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.78.0-1
+- Bump glib2 version 2.78.0
+- Drop DesktopQE gating 
+- Fix CVEs: CVE-2023-32636, CVE-2023-29499, CVE-2023-32611, CVE-2023-32665, DoS
+- Resolves: RHEL-5019
+- Resolves: RHEL-5020
+- Resolves: RHEL-5092
+- Resolves: RHEL-5093
+- Resolves: RHEL-5094
+
 * Mon Aug 7 2023 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.70.1-4
 - Fix Glib2 build
 - Resolves: RHEL-1056
