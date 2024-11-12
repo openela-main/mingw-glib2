@@ -1,7 +1,7 @@
 %{?mingw_package_header}
 
 Name:           mingw-glib2
-Version:        2.78.0
+Version:        2.78.6
 Release:        1%{?dist}
 Summary:        MinGW Windows GLib2 library
 
@@ -279,6 +279,11 @@ find %{buildroot} -name "*.la" -delete
 
 
 %changelog
+* Tue May 21 2024 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.78.6-1
+- Bump glib2 version 2.78.6
+- Fix CVEs: CVE-2024-34397
+- Resolves: RHEL-35776
+
 * Thu Oct 26 2023 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.78.0-1
 - Bump glib2 version 2.78.0
 - Drop DesktopQE gating 
