@@ -2,7 +2,7 @@
 
 Name:           mingw-glib2
 Version:        2.78.6
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        MinGW Windows GLib2 library
 
 License:        LGPL-2.0-or-later
@@ -43,6 +43,10 @@ BuildRequires:  python3-devel
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=674214
 Patch1:         0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch
+
+# https://issues.redhat.com/browse/RHEL-67089
+# https://gitlab.gnome.org/GNOME/glib/-/issues/3461
+Patch2:         CVE-2024-52533-buffer-overflow-in-set_connect_msg.patch
 
 # Prefer the use of GCC constructors over DllMain
 # This prevents having to depend on DllMain in static libraries
@@ -279,6 +283,9 @@ find %{buildroot} -name "*.la" -delete
 
 
 %changelog
+* Tue Nov 26 2024 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.78.6-2
+- Resolves: RHEL-67088 - CVE-2024-52533 mingw-glib2: buffer overflow in set_connect_msg()
+
 * Tue May 21 2024 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.78.6-1
 - Bump glib2 version 2.78.6
 - Fix CVEs: CVE-2024-34397
