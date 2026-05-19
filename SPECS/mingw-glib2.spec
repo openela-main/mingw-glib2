@@ -2,7 +2,7 @@
 
 Name:           mingw-glib2
 Version:        2.78.6
-Release:        2%{?dist}
+Release:        3%{?dist}
 Summary:        MinGW Windows GLib2 library
 
 License:        LGPL-2.0-or-later
@@ -47,6 +47,12 @@ Patch1:         0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch
 # https://issues.redhat.com/browse/RHEL-67089
 # https://gitlab.gnome.org/GNOME/glib/-/issues/3461
 Patch2:         CVE-2024-52533-buffer-overflow-in-set_connect_msg.patch
+
+# https://issues.redhat.com/browse/RHEL-131012
+# https://gitlab.gnome.org/GNOME/glib/-/issues/3827
+# https://gitlab.gnome.org/GNOME/glib/-/merge_requests/4914
+# https://gitlab.gnome.org/GNOME/glib/-/merge_requests/4915
+Patch3:         CVE-2025-13601-gconvert-Error-out-if-g_escape_uri_string-would-overflow.patch
 
 # Prefer the use of GCC constructors over DllMain
 # This prevents having to depend on DllMain in static libraries
@@ -283,6 +289,9 @@ find %{buildroot} -name "*.la" -delete
 
 
 %changelog
+* Mon Dec 8 2025 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.78.6-3
+- Resolves: RHEL-131012 - CVE-2025-13601 mingw-glib2: Integer overflow in in g_escape_uri_string()
+
 * Tue Nov 26 2024 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.78.6-2
 - Resolves: RHEL-67088 - CVE-2024-52533 mingw-glib2: buffer overflow in set_connect_msg()
 
