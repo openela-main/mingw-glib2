@@ -1,7 +1,7 @@
 %{?mingw_package_header}
 
 Name:           mingw-glib2
-Version:        2.82.2
+Version:        2.87.0
 Release:        1%{?dist}
 Summary:        MinGW Windows GLib2 library
 
@@ -43,6 +43,11 @@ BuildRequires:  python3-devel
 
 # https://bugzilla.gnome.org/show_bug.cgi?id=674214
 Patch1:         0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch
+
+# https://issues.redhat.com/browse/RHEL-130993
+# https://gitlab.gnome.org/GNOME/glib/-/issues/3827
+# https://gitlab.gnome.org/GNOME/glib/-/merge_requests/4914
+Patch2:         CVE-2025-13601-gconvert-Error-out-if-g_escape_uri_string-would-overflow.patch
 
 # Prefer the use of GCC constructors over DllMain
 # This prevents having to depend on DllMain in static libraries
@@ -162,6 +167,10 @@ rm -f %{buildroot}%{mingw64_bindir}/gdbus-codegen
 rm -rf %{buildroot}%{mingw64_libdir}/gdbus-2.0
 sed -i 's|gdbus_codegen=.*|gdbus_codegen=%{_bindir}/gdbus-codegen|g' %{buildroot}%{mingw64_libdir}/pkgconfig/gio-2.0.pc
 
+# Delete installed tests
+rm -rf %{buildroot}%{mingw32_libexecdir}/installed-tests/
+rm -rf %{buildroot}%{mingw64_libexecdir}/installed-tests/
+
 # Drop all .la files
 find %{buildroot} -name "*.la" -delete
 
@@ -177,7 +186,7 @@ find %{buildroot} -name "*.la" -delete
 
 # Win32
 %files -n mingw32-glib2 -f mingw32-glib20.lang
-%license COPYING
+%license LICENSES/LGPL-2.1-or-later.txt
 %{mingw32_bindir}/gdbus.exe
 %{mingw32_bindir}/gi-compile-repository.exe
 %{mingw32_bindir}/gi-decompile-typelib.exe
@@ -235,7 +244,7 @@ find %{buildroot} -name "*.la" -delete
 
 # Win64
 %files -n mingw64-glib2 -f mingw64-glib20.lang
-%license COPYING
+%license LICENSES/LGPL-2.1-or-later.txt
 %{mingw64_bindir}/gdbus.exe
 %{mingw64_bindir}/gi-compile-repository.exe
 %{mingw64_bindir}/gi-decompile-typelib.exe
@@ -293,6 +302,10 @@ find %{buildroot} -name "*.la" -delete
 
 
 %changelog
+* Mon Dec 1 2025 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.87.0-1
+- Update to 2.87.0
+- RHEL-130993 - CVE-2025-13601 mingw-glib2: Integer overflow in in g_escape_uri_string()
+
 * Mon Nov 25 2024 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.82.2-1
 - Update to 2.82.2
 - RHEL-35772 - CVE-2024-34397 mingw-glib2: glib2: Signal subscription vulnerabilities
