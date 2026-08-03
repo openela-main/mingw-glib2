@@ -5,7 +5,7 @@
 
 Name:           mingw-glib2
 Version:        2.70.1
-Release:        1%{?dist}
+Release:        9%{?dist}
 Summary:        MinGW Windows GLib2 library
 
 License:        LGPLv2+
@@ -55,6 +55,31 @@ Patch1:         0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch
 # https://bugzilla.gnome.org/show_bug.cgi?id=698118
 Patch2:         glib-prefer-constructors-over-DllMain.patch
 
+# https://gitlab.gnome.org/GNOME/glib/-/merge_requests/5172
+Patch3:         mingw-glib2-2.70.1-CVE-2026-58015.patch
+
+# CVE-2026-58014: one-byte heap under-read with g_key_file_get_locale_string_list()
+# https://gitlab.gnome.org/GNOME/glib/-/merge_requests/5171
+Patch4:         mingw-glib2-2.70.1-CVE-2026-58014.patch
+
+# https://github.com/GNOME/glib/commit/c9da977c178f
+Patch5:         mingw-glib2-2.70.1-CVE-2026-58016.patch
+
+# https://github.com/GNOME/glib/commit/31f82e22e21bae520b7228f7f57d357fb20df8a4
+Patch6:         mingw-glib2-2.70.1-CVE-2025-14087.patch
+
+# https://gitlab.gnome.org/GNOME/glib/-/issues/3918
+Patch7:         mingw-glib2-2.70.1-CVE-2026-58012.patch
+
+# https://gitlab.gnome.org/GNOME/glib/-/work_items/3925
+Patch8:         mingw-glib2-2.70.1-CVE-2026-58013.patch
+
+# https://gitlab.gnome.org/GNOME/glib/-/issues/3917
+Patch9:         mingw-glib2-2.70.1-CVE-2026-58011.patch
+
+# https://gitlab.gnome.org/GNOME/glib/-/issues/3915
+Patch10:        mingw-glib2-2.70.1-CVE-2026-58010.patch
+
 %description
 MinGW Windows Glib2 library.
 
@@ -102,6 +127,14 @@ Static version of the MinGW Windows GLib2 library.
 %setup -q -n glib-%{version}
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
+%patch6 -p1
+%patch7 -p1
+%patch8 -p1
+%patch9 -p1
+%patch10 -p1
 
 %build
 %mingw_meson --default-library=both \
@@ -279,6 +312,38 @@ find $RPM_BUILD_ROOT -name "*.la" -delete
 
 
 %changelog
+* Wed Jul 22 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.70.1-9
+- Fix CVE-2026-58010: off-by-one error in gvs_tuple_is_normal()
+  Resolves: RHEL-212164
+
+* Wed Jul 22 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.70.1-8
+- Fix CVE-2026-58011: g_date_time_add_full() range validation
+  Resolves: RHEL-212184
+
+* Wed Jul 22 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.70.1-7
+- Fix CVE-2026-58013: memcmp buffer over-read in giochannel
+  Resolves: RHEL-212234
+
+* Wed Jul 22 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.70.1-6
+- Fix CVE-2026-58012: buffer overflow in gregex substitutions
+  Resolves: RHEL-212200
+
+* Wed Jul 22 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.70.1-5
+- Fix CVE-2025-14087: integer overflow in GVariant parser
+  Resolves: RHEL-154707
+
+* Wed Jul 22 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.70.1-4
+- Fix CVE-2026-58016: D-Bus introspection XML node nesting check
+  Resolves: RHEL-190617
+
+* Wed Jul 22 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.70.1-3
+- Fix CVE-2026-58014: one-byte heap under-read in mingw-glib2
+  Resolves: RHEL-190609
+
+* Mon Jul 20 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.70.1-2
+- Fix CVE-2026-58015: D-Bus cookie context path traversal
+  Resolves: RHEL-212246
+
 * Thu Dec 23 2021 Yan Vugenfirer <yvugenfi@redhat.com> 2.70.1-1
 - Update to 2.70.1
 - Resolves: rhbz#2034959
