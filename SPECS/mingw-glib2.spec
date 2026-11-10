@@ -1,7 +1,7 @@
 %{?mingw_package_header}
 
 Name:           mingw-glib2
-Version:        2.87.0
+Version:        2.89.2
 Release:        1%{?dist}
 Summary:        MinGW Windows GLib2 library
 
@@ -40,14 +40,6 @@ BuildRequires:  gettext
 # Native version required for glib-genmarshal
 BuildRequires:  glib2-devel >= 2.45.3
 BuildRequires:  python3-devel
-
-# https://bugzilla.gnome.org/show_bug.cgi?id=674214
-Patch1:         0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch
-
-# https://issues.redhat.com/browse/RHEL-130993
-# https://gitlab.gnome.org/GNOME/glib/-/issues/3827
-# https://gitlab.gnome.org/GNOME/glib/-/merge_requests/4914
-Patch2:         CVE-2025-13601-gconvert-Error-out-if-g_escape_uri_string-would-overflow.patch
 
 # Prefer the use of GCC constructors over DllMain
 # This prevents having to depend on DllMain in static libraries
@@ -302,6 +294,24 @@ find %{buildroot} -name "*.la" -delete
 
 
 %changelog
+* Mon Jul 27 2026 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.89.2-1
+- Rebase mingw-glib2 to 2.89.2
+- RHEL-212173 - CVE-2026-58010
+- RHEL-212180 - CVE-2026-58011
+- RHEL-212207 - CVE-2026-58012
+- RHEL-212231 - CVE-2026-58013
+- RHEL-190607 - CVE-2026-58014
+- RHEL-212243 - CVE-2026-58015
+- RHEL-190612 - CVE-2026-58016
+
+* Wed Mar 25 2026 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.87.5-1
+- RHEL-159874 - Rebase mingw-glib2 to 2.87.5
+- RHEL-159187 - CVE-2025-14087 mingw-glib2: GLib: Buffer underflow in GVariant parser leads to heap corruption
+- Drop 0001-Use-CreateFile-on-Win32-to-make-sure-g_unlink-always.patch see https://bugzilla.redhat.com/show_bug.cgi?id=2431179
+
+* Wed Feb 25 2026 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.87.0-2
+- RHEL-151748 - Glib2 cause qga command 'guest-ssh-get-authorized-keys' failed
+
 * Mon Dec 1 2025 Konstantin Kostiuk <kkostiuk@redhat.com> - 2.87.0-1
 - Update to 2.87.0
 - RHEL-130993 - CVE-2025-13601 mingw-glib2: Integer overflow in in g_escape_uri_string()
